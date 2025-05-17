@@ -10,7 +10,7 @@ import classes from './PostDetails.module.css';
 export default function PostDetails() {
   const post = useLoaderData();
   const revalidator = useRevalidator();
-  const navigate = useNavigate(); // <- tambahkan ini
+  const navigate = useNavigate();
 
   async function handleDelete() {
     const shouldDelete = window.confirm(
@@ -18,14 +18,17 @@ export default function PostDetails() {
     );
     if (!shouldDelete) return;
 
-    const response = await fetch('http://localhost:8080/posts/' + post.id, {
-      method: 'DELETE',
-    });
+    const response = await fetch(
+      'https://simple-poster-api-production.up.railway.app/posts/' + post.id,
+      {
+        method: 'DELETE',
+      }
+    );
 
     if (response.ok) {
-      navigate('/'); // navigasi ke halaman utama
+      navigate('/');
       setTimeout(() => {
-        revalidator.revalidate(); // force refresh list post
+        revalidator.revalidate();
       }, 100);
     } else {
       alert('Failed to delete the post.');
@@ -67,7 +70,9 @@ export default function PostDetails() {
 }
 
 export async function loader({ params }) {
-  const response = await fetch('http://localhost:8080/posts/' + params.id);
+  const response = await fetch(
+    'https://simple-poster-api-production.up.railway.app/posts/' + params.id
+  );
   const resData = await response.json();
   return resData.post;
 }
